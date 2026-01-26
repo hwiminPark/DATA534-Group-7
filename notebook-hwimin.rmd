@@ -1,0 +1,31 @@
+---
+title: "DATA 534 Group Project – Daily Notebook"
+author: "Hwimin"
+date: "Jan 26"
+output: html_document
+---
+
+## Day 1 – Project setup
+
+**Date:** Jan 26
+
+**What I did:**
+
+- Installed key packages: devtools, usethis, roxygen2, testthat, httr2, jsonlite, dplyr, tidyr, ggplot2
+- Initialized package structure with `usethis::create_package()`
+- Set package name: **wbmacro**
+- Added MIT license for the group
+- Updated README to Rmd format
+- Filled in DESCRIPTION (title, description, authors, dependencies)
+- Created placeholder .R files: indicators.R, countries.R, data.R
+
+**Decisions:**
+
+- Using tidyverse-style packages for clean, analysis-ready output
+- MIT license – simple and open
+
+**Commits:**
+
+- "Initialize R package skeleton with usethis"
+- "Set up package metadata, license, and function placeholders"
+- https://github.com/hwiminPark/DATA534-Group-7/commit/afa0082f49ab0c393e92388f04aa45763a875f8d
