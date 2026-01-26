@@ -1,10 +1,17 @@
 Package: wbmacro
 Title: World Bank Macroeconomic Indicators
 Version: 0.0.0.9000
-Authors@R: 
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"))
+Authors@R: c(
+   person("Hwimin", "Park", role = c("aut", "cre")),
+   person("Sage", "Yang", role = "aut"),
+   person("Anita", "Zeng", role = "aut")
+ )
 Description: An R package for easy access to World Bank development indicators with tidy output.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3
+Depends: R (>= 4.2.0)
+Imports: httr2, jsonlite, dplyr, tidyr, tibble
+Suggests: ggplot2, testthat (>= 3.0.0)
+Config/testthat/edition: 3
