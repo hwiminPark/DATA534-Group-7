@@ -2,7 +2,7 @@ Package: wbmacro
 Title: World Bank Macroeconomic Indicators
 Version: 0.0.0.9000
 Authors@R: c(
-   person("Hwimin", "Park", role = c("aut", "cre")),
+   person("Hwimin", "Park", role = c("aut", "cre"), email = "email@address.com"),
    person("Sage", "Yang", role = "aut"),
    person("Anita", "Zeng", role = "aut")
  )
@@ -13,5 +13,10 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3
 Depends: R (>= 4.2.0)
 Imports: httr2, jsonlite, dplyr, tidyr, tibble
-Suggests: ggplot2, testthat (>= 3.0.0)
+Suggests: 
+    ggplot2,
+    knitr,
+    rmarkdown,
+    testthat (>= 3.0.0)
 Config/testthat/edition: 3
+VignetteBuilder: knitr

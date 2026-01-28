@@ -1,0 +1,105 @@
+```rmd
+---
+title: "Comparing Macroeconomic Trends Across Countries"
+author: "Hwimin Park, Sage Yang, Anita Zeng"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Comparing Macroeconomic Trends Across Countries}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 7,
+  fig.height = 5
+)
+library(wbmacro)
+library(ggplot2)
+library(dplyr)
+```
+
+## Introduction
+
+The **wbmacro** package provides easy access to World Bank macroeconomic and development indicators.  
+This vignette shows a complete workflow:
+
+1. Search for indicators  
+2. List and filter countries  
+3. Fetch time-series data  
+4. Visualize trends
+
+### 1. Discover indicators
+
+Search for relevant indicators using keywords.
+
+```{r search}
+# Find indicators related to GDP per capita and population growth
+wb_search_indicators("gdp per capita") |> 
+  select(indicator_id, name, unit) |> 
+  slice_head(n = 5)
+
+wb_search_indicators("population growth") |> 
+  select(indicator_id, name) |> 
+  slice_head(n = 3)
+```
+
+Let's use:
+- `NY.GDP.PCAP.KD` — GDP per capita (constant 2015 US$)
+- `SP.POP.GROW` — Population growth (annual %)
+
+### 2. Select countries
+
+Get country metadata and filter to a few interesting ones (e.g. high-income or large economies).
+
+```{r countries}
+wb_countries(exclude_aggregates = TRUE) |> 
+  filter(income_level %in% c("High income", "Upper middle income")) |> 
+  count(income_level, region)
+
+# Example selection: Canada, USA, China, Germany, India
+selected_countries <- c("CAN", "USA", "CHN", "DEU", "IND")
+```
+
+### 3. Fetch time-series data (2000–2024)
+
+```{r fetch, cache = TRUE}
+dat <- wb_fetch(
+  indicators = c("NY.GDP.PCAP.KD", "SP.POP.GROW"),
+  countries  = selected_countries,
+  start_year = 2000,
+  end_year   = 2024
+)
+
+dat |> 
+  count(country_name, indicator_name)
+```
+
+### 4. Visualize trends
+
+Compare GDP per capita growth across countries.
+
+```{r plot-gdp, fig.cap = "GDP per capita trends (constant 2015 US$)"}
+wb_plot_trends(
+  dat |> filter(indicator_id == "NY.GDP.PCAP.KD"),
+  color_by = "country",
+  title   = "GDP per Capita Trends (2000–2024)"
+)
+```
+
+Or facet by indicator for comparison.
+
+```{r plot-multi, fig.cap = "GDP per capita vs. Population growth"}
+wb_plot_trends(
+  dat,
+  color_by  = "country",
+  facet_by  = "indicator",
+  title     = "Macroeconomic Trends: GDP per Capita and Population Growth"
+)
+```
+
+This workflow allows quick comparisons of macroeconomic trends across countries and indicators.
+
+```
