@@ -15,13 +15,13 @@ wb_plot_trends(
 \arguments{
 \item{data}{A tibble from wb_fetch() (long format).}
 
-\item{color_by}{Character: "country" (default) or "indicator" to color lines.}
+\item{color_by}{"country" (default) or "indicator".}
 
-\item{facet_by}{Character: "country", "indicator", or NULL (no facet).}
+\item{facet_by}{"country", "indicator", or NULL.}
 
-\item{title}{Character: optional plot title.}
+\item{title}{Optional plot title.}
 
-\item{...}{Passed to ggplot2::geom_line() etc.}
+\item{...}{Passed to geom_line().}
 }
 \value{
 A ggplot object.
@@ -29,14 +29,4 @@ A ggplot object.
 \description{
 Creates a ggplot2 line chart of time series from wb_fetch() output.
 Supports coloring by country or indicator, faceting, and basic themes.
-}
-\examples{
-dat <- wb_fetch(
-  indicators = c("NY.GDP.PCAP.KD", "SP.POP.GROW"),
-  countries = c("CAN", "USA", "CHN"),
-  start_year = 2010,
-  end_year = 2023
-)
-wb_plot_trends(dat, color_by = "country", facet_by = "indicator")
-
 }

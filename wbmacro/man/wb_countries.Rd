@@ -7,21 +7,24 @@
 wb_countries(exclude_aggregates = FALSE, income_groups = NULL, per_page = 100)
 }
 \arguments{
-\item{exclude_aggregates}{Logical. If TRUE (default FALSE), remove regional/aggregate entries.}
+\item{exclude_aggregates}{Logical. If TRUE, remove regional/aggregate entries
+(e.g. "World", "High income"). Default: FALSE (return everything).}
 
-\item{income_groups}{Character vector of income levels to include (e.g. "High income").}
+\item{income_groups}{Character vector of income levels to include
+(e.g. c("High income", "Upper middle income")).}
 
-\item{per_page}{Max items per API page (default 100).}
+\item{per_page}{Max items per API page (default 100, safe value).}
 }
 \value{
-A tibble with columns: iso3c, iso2c, name, region, income_level, etc.
+A tibble with columns: iso3c, iso2c, name, region, income_level,
+lending_type, capitalCity, longitude, latitude, etc.
 }
 \description{
 Retrieve metadata for countries, economies, and aggregates from the World Bank API.
 Handles pagination automatically and returns a tidy tibble.
 }
 \examples{
-wb_countries() |> nrow()
-wb_countries(exclude_aggregates = TRUE) |> head()
+wb_countries() |> nrow()                      # ~300–310 entries
+wb_countries(exclude_aggregates = TRUE) |> nrow()  # ~210–220 countries
 
 }
