@@ -4,15 +4,18 @@
 #' Retrieve metadata for countries, economies, and aggregates from the World Bank API.
 #' Handles pagination automatically and returns a tidy tibble.
 #'
-#' @param exclude_aggregates Logical. If TRUE (default FALSE), remove regional/aggregate entries.
-#' @param income_groups Character vector of income levels to include (e.g. "High income").
-#' @param per_page Max items per API page (default 100).
+#' @param exclude_aggregates Logical. If TRUE, remove regional/aggregate entries
+#'   (e.g. "World", "High income"). Default: FALSE (return everything).
+#' @param income_groups Character vector of income levels to include
+#'   (e.g. c("High income", "Upper middle income")).
+#' @param per_page Max items per API page (default 100, safe value).
 #'
-#' @return A tibble with columns: iso3c, iso2c, name, region, income_level, etc.
+#' @return A tibble with columns: iso3c, iso2c, name, region, income_level,
+#'   lending_type, capitalCity, longitude, latitude, etc.
 #'
 #' @examples
-#' wb_countries() |> nrow()
-#' wb_countries(exclude_aggregates = TRUE) |> head()
+#' wb_countries() |> nrow()                      # ~300–310 entries
+#' wb_countries(exclude_aggregates = TRUE) |> nrow()  # ~210–220 countries
 #'
 #' @export
 wb_countries <- function(exclude_aggregates = FALSE,
@@ -24,6 +27,7 @@ wb_countries <- function(exclude_aggregates = FALSE,
   countries <- list()
   page <- 1
 
+  # Pagination loop: keep fetching until no more pages
   repeat {
     resp <- httr2::request(base_url) |>
       httr2::req_url_query(
@@ -37,13 +41,11 @@ wb_countries <- function(exclude_aggregates = FALSE,
 
     content <- httr2::resp_body_json(resp, simplifyVector = TRUE)
 
-    if (length(content) < 2 || !is.data.frame(content[[2]])) {
-      break
-    }
+    if (length(content) < 2 || !is.data.frame(content[[2]])) break
 
+    # Extract human-readable values from nested list-columns
     page_data <- content[[2]] |>
       tibble::as_tibble() |>
-      # Extract .value from nested list-columns
       dplyr::mutate(
         region       = region$value,
         income_level = incomeLevel$value,
@@ -66,18 +68,17 @@ wb_countries <- function(exclude_aggregates = FALSE,
 
     countries[[page]] <- page_data
 
+    # Check if this was the last page
     meta <- content[[1]]
     if (page >= meta$pages) break
     page <- page + 1
   }
 
-  if (length(countries) == 0) {
-    return(tibble::tibble())
-  }
+  if (length(countries) == 0) return(tibble::tibble())
 
   result <- dplyr::bind_rows(countries)
 
-  # Apply filters
+  # Apply optional filters
   if (exclude_aggregates) {
     result <- result |>
       dplyr::filter(
