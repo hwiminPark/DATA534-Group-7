@@ -2,4 +2,5 @@
 
 export(wb_countries)
 export(wb_fetch)
+export(wb_plot_trends)
 export(wb_search_indicators)
