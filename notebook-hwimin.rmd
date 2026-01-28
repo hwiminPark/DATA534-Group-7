@@ -1,7 +1,6 @@
 ---
 title: "DATA 534 Group Project – Daily Notebook"
 author: "Hwimin"
-date: "Jan 26"
 output: html_document
 ---
 
@@ -29,3 +28,27 @@ output: html_document
 - "Initialize R package skeleton with usethis"
 - "Set up package metadata, license, and function placeholders"
 - https://github.com/hwiminPark/DATA534-Group-7/commit/afa0082f49ab0c393e92388f04aa45763a875f8d
+
+## Day 2 – Core functions: search, countries, data fetch
+
+**Date:** Jan 27
+
+**What I did:**
+
+- Implemented `wb_search_indicators()` to search indicators by keyword (httr2 + JSON parsing → tidy tibble)
+- Created `wb_countries()` with pagination loop, filters (exclude aggregates, income groups)
+- Built main `wb_fetch()` function for time-series data (multi-indicator/country/year support, pagination)
+- Tested all functions with real examples (e.g. GDP per capita & population for China/Canada/USA)
+- Added basic error handling and informative messages
+
+**Decisions:**
+
+- Pagination essential for both countries (~300 entries) and large data fetches
+- Kept functions simple but user-friendly (validation, defaults)
+
+**Commits:**
+
+- "wb_search_indicators function"
+- "wb_countries with pagination and filtering"
+- "core wb_fetch function with pagination"
+- https://github.com/hwiminPark/DATA534-Group-7/commit/84808d3f4f4ad8de859acd5193fb5a2a9ec70157
