@@ -52,3 +52,24 @@ output: html_document
 - "wb_countries with pagination and filtering"
 - "core wb_fetch function with pagination"
 - https://github.com/hwiminPark/DATA534-Group-7/commit/84808d3f4f4ad8de859acd5193fb5a2a9ec70157
+
+## Day 3 – Vignette creation
+
+**Date:** Jan 28
+
+**What I did:**
+
+- Created vignette "comparing-macro-trends" using usethis
+- Included two plots: one single-indicator line chart, one faceted multi-indicator
+- Included some more useful comments
+
+**Decisions:**
+
+- Focused on 5 countries + 2 indicators to keep example fast and clear
+- Used cache=TRUE on fetch chunk to speed up vignette build
+- Emphasized tidy output → ggplot2 workflow as per proposal
+
+**Commits:**
+
+- "create main vignette with end-to-end workflow and plots"
+- https://github.com/hwiminPark/DATA534-Group-7/commit/0e128eee52c16d30987896cba19938046eaefb5a
