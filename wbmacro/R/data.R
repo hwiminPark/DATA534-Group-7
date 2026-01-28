@@ -5,22 +5,12 @@
 #' Handles pagination and returns tidy long-format data.
 #'
 #' @param indicators Character vector of indicator codes (e.g. "NY.GDP.PCAP.KD").
-#'   Use `wb_search_indicators()` to find codes.
-#' @param countries Character vector of ISO3 codes (e.g. c("CAN", "USA", "CHN")).
-#'   Use `wb_countries()` to get valid codes. "all" fetches everything (slow!).
-#' @param start_year,end_year Integer years (e.g. 2000, 2024).
+#' @param countries Character vector of ISO3 codes or "all".
+#' @param start_year,end_year Integer years.
 #' @param per_page Items per API page (default 100).
 #'
 #' @return A tibble with columns: country_iso3c, country_name, indicator_id,
 #'   indicator_name, year, value, unit, etc.
-#'
-#' @examples
-#' wb_fetch(
-#'   indicators = "NY.GDP.PCAP.KD",
-#'   countries  = c("CAN", "USA"),
-#'   start_year = 2010,
-#'   end_year   = 2023
-#' )
 #'
 #' @export
 wb_fetch <- function(indicators,
@@ -29,32 +19,19 @@ wb_fetch <- function(indicators,
                      end_year,
                      per_page = 100) {
 
-  if (length(indicators) == 0 || anyNA(indicators)) {
-    stop("Provide at least one valid indicator code.")
-  }
-
-  if (length(countries) == 0 || anyNA(countries)) {
-    stop("Provide at least one valid country code.")
-  }
-
+  # Input validation
+  if (length(indicators) == 0 || anyNA(indicators)) stop("Provide at least one valid indicator.")
+  if (length(countries) == 0 || anyNA(countries)) stop("Provide at least one country code.")
   if (!is.numeric(start_year) || !is.numeric(end_year) ||
       start_year > end_year || start_year < 1960 || end_year > 2100) {
-    stop("Invalid year range (use integers, e.g. 2000 to 2024).")
+    stop("Invalid year range (integers, e.g. 2000 to 2024).")
   }
 
-  # Special case: "all" countries
-  if (identical(countries, "all")) {
-    countries <- "all"
-  } else {
-    countries <- paste(countries, collapse = ";")
-  }
-
+  # Build country string
+  countries_str <- if (identical(countries, "all")) "all" else paste(countries, collapse = ";")
   ind_str <- paste(indicators, collapse = ";")
 
-  base_url <- paste0("https://api.worldbank.org/v2/country/",
-                     countries,
-                     "/indicator/",
-                     ind_str)
+  base_url <- paste0("https://api.worldbank.org/v2/country/", countries_str, "/indicator/", ind_str)
 
   data_list <- list()
   page <- 1
@@ -73,9 +50,7 @@ wb_fetch <- function(indicators,
 
     content <- httr2::resp_body_json(resp, simplifyVector = TRUE)
 
-    if (length(content) < 2 || !is.data.frame(content[[2]])) {
-      break
-    }
+    if (length(content) < 2 || !is.data.frame(content[[2]])) break
 
     page_data <- content[[2]] |>
       tibble::as_tibble() |>
@@ -103,41 +78,34 @@ wb_fetch <- function(indicators,
     page <- page + 1
   }
 
+  # Handle empty combined result → fallback to per-indicator fetch
   if (length(data_list) == 0) {
     message(
-      "API returned no data for the combined query.\n",
-      "This can happen with multi-indicator requests if one series has gaps.\n",
-      "Falling back to fetching each indicator separately..."
+      "No data from combined query (common API quirk with multi-indicator requests).\n",
+      "Falling back to single-indicator fetches..."
     )
 
     all_data <- list()
 
     for (ind in indicators) {
-      single_resp <- tryCatch(
-        wb_fetch(
-          indicators = ind,
-          countries  = countries,
-          start_year = start_year,
-          end_year   = end_year,
-          per_page   = per_page
-        ),
+      single <- tryCatch(
+        wb_fetch(indicators = ind, countries = countries,
+                 start_year = start_year, end_year = end_year,
+                 per_page = per_page),
         error = function(e) {
-          message("Failed for indicator '", ind, "': ", e$message)
+          message("  Failed for ", ind, ": ", e$message)
           tibble::tibble()
         }
       )
-
-      if (nrow(single_resp) > 0) {
-        all_data[[ind]] <- single_resp
-      }
+      if (nrow(single) > 0) all_data[[ind]] <- single
     }
 
     if (length(all_data) > 0) {
       return(dplyr::bind_rows(all_data))
-    } else {
-      message("Fallback also returned no data. Check indicator availability, years, or try later.")
-      return(tibble::tibble())
     }
+
+    message("No data after fallback. Check availability at data.worldbank.org.")
+    return(tibble::tibble())
   }
 
   dplyr::bind_rows(data_list)
