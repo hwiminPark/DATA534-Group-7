@@ -35,17 +35,9 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y libcurl4-openssl-dev libssl-dev libxml2-dev
 
-      - name: Install dependencies (CRAN + extras, skip local package)
+      - name: Install CRAN dependencies
         run: |
-          install.packages(c("pak", "rcmdcheck"))
-          pak::pkg_install(
-            pkg = c(
-              "dplyr", "ggplot2", "httr2", "tibble", "stringr",
-              "testthat", "knitr", "rmarkdown"
-            ),
-            lib = .libPaths()[1],
-            upgrade = TRUE
-          )
+          Rscript -e "install.packages(c('pak', 'rcmdcheck', 'dplyr', 'ggplot2', 'httr2', 'tibble', 'stringr', 'testthat', 'knitr', 'rmarkdown'), repos = 'https://cloud.r-project.org')"
 
       - name: Check package
         uses: r-lib/actions/check-r-package@v2
