@@ -73,3 +73,26 @@ output: html_document
 
 - "create main vignette with end-to-end workflow and plots"
 - https://github.com/hwiminPark/DATA534-Group-7/commit/0e128eee52c16d30987896cba19938046eaefb5a
+
+## Day 4– README, LICENSE, tests, and CI
+
+**Date:** Jan 29
+
+**What I did:**
+
+- Finalized **README.Rmd**
+- Confirmed **MIT LICENSE**
+- Ran `devtools::test()`
+- Set up GitHub Actions workflow (`R-CMD-check.yaml`)
+
+**Decisions / thoughts:**
+
+- Kept README example short but complete (uses real functions, shows plot)
+- Focused on getting to 0 check issues — feels much more professional now
+
+**Commits:**
+
+- "Finalize README with example, badges, and vignette link"
+- "Add MIT LICENSE with 2026 copyright"
+- "Set up GitHub Actions R-CMD-check workflow"
+- https://github.com/hwiminPark/DATA534-Group-7/commit/c262b7cc026b7e2d192870283bd130b22d4228e2
