@@ -1,1 +1,96 @@
-# DATA534-Group-7
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+# wbmacro
+
+<!-- badges: start -->
+
+[![R-CMD-check](https://github.com/hwiminPark/DATA534-Group-7/actions/workflows/R-CMD-check.yml/badge.svg?branch=github-actions)](https://github.com/hwiminPark/DATA534-Group-7/actions/workflows/R-CMD-check.yml)
+<!-- badges: end -->
+
+**wbmacro** is an R package that provides a clean, tidyverse-friendly
+interface to the **World Bank Indicators API**.
+
+It lets users: - Search for macroeconomic/development indicators - List
+and filter countries/regions - Fetch time-series data for one or more
+indicators/countries/years - Quickly visualize trends with ggplot2
+
+The package returns analysis-ready tibbles and focuses on cross-country
+comparisons over time (e.g.GDP per capita, population growth,
+inflation).
+
+## Installation
+
+You can install the development version from GitHub:
+
+``` r
+# install.packages("devtools")
+devtools::install_github("yourusername/wbmacro")
+```
+
+## Quick start
+
+``` r
+library(wbmacro)
+library(dplyr)
+#> Warning: package 'dplyr' was built under R version 4.5.2
+library(ggplot2)
+#> Warning: package 'ggplot2' was built under R version 4.5.2
+
+# 1. Discover indicators
+wb_search_indicators("gdp per capita") |>
+  select(indicator_id, name, unit) |>
+  slice_head(n = 5)
+#> # A tibble: 5 × 3
+#>   indicator_id         name                                    unit 
+#>   <chr>                <chr>                                   <chr>
+#> 1 1.0.HCount.1.90usd   Poverty Headcount ($1.90 a day)         <NA> 
+#> 2 1.0.HCount.2.5usd    Poverty Headcount ($2.50 a day)         <NA> 
+#> 3 1.0.HCount.Mid10to50 Middle Class ($10-50 a day) Headcount   <NA> 
+#> 4 1.0.HCount.Ofcl      Official Moderate Poverty Rate-National <NA> 
+#> 5 1.0.HCount.Poor4uds  Poverty Headcount ($4 a day)            <NA>
+
+# 2. Fetch data for a few countries (2015–2023)
+dat <- wb_fetch(
+  indicators = c("NY.GDP.PCAP.KD", "SP.POP.GROW"),
+  countries  = c("CAN", "USA", "CHN", "DEU", "IND"),
+  start_year = 2015,
+  end_year   = 2023
+)
+
+# 3. Plot trends
+wb_plot_trends(
+  dat |> filter(indicator_id == "NY.GDP.PCAP.KD"),
+  color_by = "country",
+  title = "GDP per capita (constant 2015 US$) – Selected Countries"
+)
+```
+
+<img src="man/figures/README-example-1.png" width="100%" />
+
+For a full end-to-end example (search → filter countries → fetch →
+plot), see the vignette:
+
+``` r
+vignette("comparing-macro-trends", package = "wbmacro")
+```
+
+## Features
+
+- Tidy output (long format tibbles ready for `dplyr`/`ggplot2`)
+- Pagination handling for large requests
+- Basic input validation & friendly error/fallback messages
+- Quick plotting helper (`wb_plot_trends()`)
+- Focus on comparative macroeconomic analysis
+
+## Development status
+
+- Core functions implemented and tested
+- Vignette complete
+- Tests passing locally & in CI
+- Aiming for clean `R CMD check` results
+
+## Contributing
+
+Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code
+of conduct and pull request process.
