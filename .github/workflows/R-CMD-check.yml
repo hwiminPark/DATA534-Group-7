@@ -43,6 +43,8 @@ jobs:
         uses: r-lib/actions/check-r-package@v2
         with:
           upload-snapshots: true
-          build_args: '--no-manual'
-          check-dir: 'check'
+          build_args: 'c("--no-manual")'
           working-directory: '${{ github.event.repository.name }}'
+          args: 'c("--no-manual", "--as-cran")'
+          check-dir: 'check'
+          error-on: 'warning'
