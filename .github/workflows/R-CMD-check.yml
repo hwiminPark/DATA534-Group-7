@@ -37,14 +37,19 @@ jobs:
 
       - name: Install CRAN dependencies
         run: |
-          Rscript -e "install.packages(c('pak', 'rcmdcheck', 'dplyr', 'ggplot2', 'httr2', 'tibble', 'stringr', 'testthat', 'knitr', 'rmarkdown'), repos = 'https://cloud.r-project.org')"
+          Rscript -e "\
+            install.packages( \
+              c('pak', 'rcmdcheck', 'dplyr', 'ggplot2', 'httr2', 'tibble', \
+                'stringr', 'testthat', 'knitr', 'rmarkdown'), \
+              repos = 'https://cloud.r-project.org' \
+            ) \
+          "
 
       - name: Check package
         uses: r-lib/actions/check-r-package@v2
         with:
           upload-snapshots: true
-          build_args: 'c("--no-manual")'
-          working-directory: '${{ github.event.repository.name }}'
-          args: 'c("--no-manual", "--as-cran")'
+          build_args: '--no-manual'
+          working-directory: 'wbmacro'
           check-dir: 'check'
           error-on: 'warning'
