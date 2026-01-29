@@ -8,11 +8,11 @@ wb_search_indicators(keyword = NULL, page_size = 50, ...)
 }
 \arguments{
 \item{keyword}{Character string to search for (case-insensitive partial match).
-If NULL, returns empty tibble (or consider fetching all, but not recommended).}
+If NULL or empty, returns empty tibble (avoid fetching all indicators).}
 
 \item{page_size}{Number of results per page (max 1000, default 50).}
 
-\item{...}{Additional query parameters passed to the API (e.g. source=2).}
+\item{...}{Additional query parameters passed to the API (e.g. source=2 for specific data sources).}
 }
 \value{
 A tibble with columns: indicator_id, name, unit, source_note,

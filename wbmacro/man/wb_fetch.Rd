@@ -7,13 +7,11 @@
 wb_fetch(indicators, countries, start_year, end_year, per_page = 100)
 }
 \arguments{
-\item{indicators}{Character vector of indicator codes (e.g. "NY.GDP.PCAP.KD").
-Use \code{wb_search_indicators()} to find codes.}
+\item{indicators}{Character vector of indicator codes (e.g. "NY.GDP.PCAP.KD").}
 
-\item{countries}{Character vector of ISO3 codes (e.g. c("CAN", "USA", "CHN")).
-Use \code{wb_countries()} to get valid codes. "all" fetches everything (slow!).}
+\item{countries}{Character vector of ISO3 codes or "all".}
 
-\item{start_year, end_year}{Integer years (e.g. 2000, 2024).}
+\item{start_year, end_year}{Integer years.}
 
 \item{per_page}{Items per API page (default 100).}
 }
@@ -24,13 +22,4 @@ indicator_name, year, value, unit, etc.
 \description{
 Retrieve time-series data for specified indicators and countries over a date range.
 Handles pagination and returns tidy long-format data.
-}
-\examples{
-wb_fetch(
-  indicators = "NY.GDP.PCAP.KD",
-  countries  = c("CAN", "USA"),
-  start_year = 2010,
-  end_year   = 2023
-)
-
 }
