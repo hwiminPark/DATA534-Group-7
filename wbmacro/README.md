@@ -16,7 +16,7 @@ and filter countries/regions - Fetch time-series data for one or more
 indicators/countries/years - Quickly visualize trends with ggplot2
 
 The package returns analysis-ready tibbles and focuses on cross-country
-comparisons over time (e.g.GDP per capita, population growth,
+comparisons over time (e.g. GDP per capita, population growth,
 inflation).
 
 ## Installation
@@ -66,7 +66,7 @@ wb_plot_trends(
 )
 ```
 
-<img src="wbmacro/man/figures/README-example-1.png" width="100%" />
+<img src="man/figures/README-example-1.png" width="100%" />
 
 For a full end-to-end example (search → filter countries → fetch →
 plot), see the vignette:
