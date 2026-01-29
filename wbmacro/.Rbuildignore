@@ -4,3 +4,5 @@
 ^README\.Rmd$
 ^README\.html$
 \.Rproj$
+^\.github$
+^CODE_OF_CONDUCT\.md$
