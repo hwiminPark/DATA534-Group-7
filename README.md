@@ -66,7 +66,7 @@ wb_plot_trends(
 )
 ```
 
-<img src="man/figures/README-example-1.png" width="100%" />
+<img src="wbmacro/man/figures/README-example-1.png" width="100%" />
 
 For a full end-to-end example (search → filter countries → fetch →
 plot), see the vignette:
