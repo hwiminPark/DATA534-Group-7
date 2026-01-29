@@ -1,16 +1,16 @@
+name: R-CMD-check
+
 on:
   push:
     branches: [main, master]
   pull_request:
     branches: [main, master]
 
-name: R-CMD-check
-
 jobs:
-  R-CMD-check:
+  check:
     runs-on: ${{ matrix.config.os }}
 
-    name: ${{ matrix.config.os }} (${{ matrix.config.r }})
+    name: ${{ matrix.config.os }} (R ${{ matrix.config.r }})
 
     strategy:
       fail-fast: false
@@ -31,6 +31,7 @@ jobs:
         with:
           extra-packages: any::rcmdcheck
           needs: check
+          pak-install-local: false
 
       - uses: r-lib/actions/check-r-package@v2
         with:
