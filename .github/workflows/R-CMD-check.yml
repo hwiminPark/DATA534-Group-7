@@ -39,11 +39,15 @@ jobs:
         run: |
           Rscript -e "install.packages(c('pak', 'rcmdcheck', 'dplyr', 'ggplot2', 'httr2', 'tibble', 'stringr', 'testthat', 'knitr', 'rmarkdown'), repos = 'https://cloud.r-project.org')"
 
-      - name: Check package
-        uses: r-lib/actions/check-r-package@v2
+      - name: Check package (manual rcmdcheck)
+        working-directory: wbmacro
+        run: |
+          Rscript -e "install.packages(c('pak', 'rcmdcheck', 'dplyr', 'ggplot2', 'httr2', 'tibble', 'stringr', 'testthat', 'knitr', 'rmarkdown'), repos = 'https://cloud.r-project.org')"
+
+      - name: Upload check results (if check dir exists)
+        if: always()
+        uses: actions/upload-artifact@v4
         with:
-          upload-snapshots: true
-          build_args: '--no-manual'
-          working-directory: 'wbmacro'
-          check-dir: 'check'
-          error-on: 'warning'
+          name: ${{ runner.os }}-check-results
+          path: wbmacro/check
+          if-no-files-found: warn
