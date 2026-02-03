@@ -24,8 +24,12 @@ inflation).
 You can install the development version from GitHub:
 
 ``` r
-# install.packages("devtools")
-devtools::install_github("yourusername/wbmacro")
+# install.packages("remotes")
+remotes::install_github(
+  "hwiminPark/DATA534-Group-7",
+  subdir  = "wbmacro",
+  upgrade = "never"
+)
 ```
 
 ## Quick start
